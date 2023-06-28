@@ -1,11 +1,22 @@
 from django.db import models
-from core.models import PublishedCreatedModel
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 
+class PublishedCreatedModel(models.Model):
+    """Абстрактная модель. Добавляет флаг is_published и crated_at."""
+    is_published = models.BooleanField('Опубликовано', default=True,
+                                       help_text='Снимите галочку, чтобы '
+                                                 'скрыть публикацию.')
+    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
 class Category(PublishedCreatedModel):
+    """Модель для определения категории"""
     title = models.CharField('Заголовок', max_length=256)
     description = models.TextField('Описание')
     slug = models.SlugField('Идентификатор', unique=True,
@@ -22,6 +33,7 @@ class Category(PublishedCreatedModel):
 
 
 class Location(PublishedCreatedModel):
+    """Модель для определения местоположения"""
     name = models.CharField('Название места', max_length=256)
 
     class Meta:
@@ -33,12 +45,15 @@ class Location(PublishedCreatedModel):
 
 
 class Post(PublishedCreatedModel):
+    """Основная модель,  определяющая перечень публикаций и основную
+    информацию о них"""
     title = models.CharField('Заголовок', max_length=256)
     text = models.TextField('Текст')
     pub_date = models.DateTimeField('Дата и время публикации',
-                                    help_text='Если установить дату и время '
-                                              'в будущем — можно делать '
-                                              'отложенные публикации.')
+                                    auto_now_add=False,
+                                    help_text='Если установить дату и '
+                                    'время в будущем — можно делать '
+                                    'отложенные публикации.')
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                verbose_name='Автор публикации')
     location = models.ForeignKey(Location, on_delete=models.SET_NULL,
