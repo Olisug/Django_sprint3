@@ -11,7 +11,8 @@ def index(request):
     posts = Post.objects.filter(is_published=True,
                                 pub_date__lte=timezone.now(),
                                 category__is_published=True).order_by(
-        '-pub_date')[:LIMIT_OF_POSTS]
+     '-pub_date'
+     )[:LIMIT_OF_POSTS]
     context = {'post_list': posts}
     return render(request, template, context)
 
