@@ -55,14 +55,17 @@ class Post(PublishedCreatedModel):
                                     'время в будущем — можно делать '
                                     'отложенные публикации.')
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               verbose_name='Автор публикации')
+                               verbose_name='Автор публикации',
+                               related_name='posts')
     location = models.ForeignKey(Location, on_delete=models.SET_NULL,
                                  blank=True, null=True,
-                                 verbose_name='Местоположение')
+                                 verbose_name='Местоположение',
+                                 related_name='posts')
     category = models.ForeignKey(Category,
                                  on_delete=models.SET_NULL,
                                  null=True,
-                                 verbose_name='Категория')
+                                 verbose_name='Категория',
+                                 related_name='posts')
 
     class Meta:
         verbose_name = 'публикация'
